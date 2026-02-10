@@ -1,0 +1,80 @@
+/**
+ * Unified theme – use these variables in all CSS files.
+ * Light/dark values are switched via prefers-color-scheme.
+ */
+
+:root {
+  /* Primary palette */
+  --color-text: rgba(255, 255, 255, 0.87);
+  --color-text-muted: #888;
+  --color-bg: #242424;
+  --color-bg-elevated: #1a1a1a;
+  --color-bg-card: #1a1a1a;
+
+  /* Links & accent (pink base) */
+  --color-link: #ec4899;
+  --color-link-hover: #f472b6;
+  --color-accent: #db2777;
+  --color-accent-soft: #ec4899aa;
+  --color-accent-secondary: #f472b6;
+  --color-accent-secondary-soft: #f472b6aa;
+
+  /* Borders */
+  --color-border: rgba(255, 255, 255, 0.1);
+}
+
+/* System preference (only when user hasn’t set a theme) */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --color-text: #213547;
+    --color-text-muted: #666;
+    --color-bg: #ffffff;
+    --color-bg-elevated: #f9f9f9;
+    --color-bg-card: #f9f9f9;
+
+    --color-link: #db2777;
+    --color-link-hover: #ec4899;
+    --color-accent: #be185d;
+    --color-accent-soft: #db2777aa;
+    --color-accent-secondary: #f472b6;
+    --color-accent-secondary-soft: #f472b6aa;
+
+    --color-border: rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* User override: force light */
+:root[data-theme="light"] {
+  --color-text: #213547;
+  --color-text-muted: #666;
+  --color-bg: #ffffff;
+  --color-bg-elevated: #f9f9f9;
+  --color-bg-card: #f9f9f9;
+
+  --color-link: #db2777;
+  --color-link-hover: #ec4899;
+  --color-accent: #be185d;
+  --color-accent-soft: #db2777aa;
+  --color-accent-secondary: #f472b6;
+  --color-accent-secondary-soft: #f472b6aa;
+
+  --color-border: rgba(0, 0, 0, 0.1);
+}
+
+/* User override: force dark */
+:root[data-theme="dark"] {
+  --color-text: rgba(255, 255, 255, 0.87);
+  --color-text-muted: #888;
+  --color-bg: #242424;
+  --color-bg-elevated: #1a1a1a;
+  --color-bg-card: #1a1a1a;
+
+  --color-link: #ec4899;
+  --color-link-hover: #f472b6;
+  --color-accent: #db2777;
+  --color-accent-soft: #ec4899aa;
+  --color-accent-secondary: #f472b6;
+  --color-accent-secondary-soft: #f472b6aa;
+
+  --color-border: rgba(255, 255, 255, 0.1);
+}
