@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { selectSearch, setDestination, setCheckIn, setCheckOut, setGuests } from './store/searchSlice'
+import { selectSearch, setDestination, setCheckIn, setCheckOut, setGuests } from '../store/searchSlice'
 import './Home.css'
 
 const POPULAR_DESTINATIONS = [
@@ -17,10 +17,10 @@ const FEATURED_HOTELS = [
 ]
 
 const WHY_US = [
-  { icon: '✓', title: 'Best Price Guarantee', text: 'Find a lower rate and we’ll match it.' },
+  { icon: '✓', title: 'Best Price Guarantee', text: "Find a lower rate and we'll match it." },
   { icon: '★', title: 'Verified Reviews', text: 'Real stays from real guests.' },
   { icon: '💳', title: 'Free Cancellation', text: 'Most stays can be cancelled for free.' },
-  { icon: '💬', title: '24/7 Support', text: 'We’re here whenever you need us.' },
+  { icon: '💬', title: '24/7 Support', text: "We're here whenever you need us." },
 ]
 
 function Home() {
