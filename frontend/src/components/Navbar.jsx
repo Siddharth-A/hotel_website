@@ -34,7 +34,7 @@ function Navbar() {
         </div>
         <div className="navbar__end">
           <ul className="navbar__links">
-            <li><a href="/rooms">Rooms</a></li>
+            <li><a href="/hotels">Hotels</a></li>
             <li><a href="/flights">Flights</a></li>
             <li><a href="/contact">Contact</a></li>
           </ul>
