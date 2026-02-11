@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectSearch, setDestination, setCheckIn, setCheckOut, setGuests } from './store/searchSlice'
 import './Home.css'
 
 const POPULAR_DESTINATIONS = [
@@ -23,10 +24,8 @@ const WHY_US = [
 ]
 
 function Home() {
-  const [destination, setDestination] = useState('')
-  const [checkIn, setCheckIn] = useState('')
-  const [checkOut, setCheckOut] = useState('')
-  const [guests, setGuests] = useState(1)
+  const { destination, checkIn, checkOut, guests } = useSelector(selectSearch)
+  const dispatch = useDispatch()
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -47,9 +46,9 @@ function Home() {
               <input
                 id="destination"
                 type="text"
-                placeholder="City, region, or hotel name"
+                placeholder="City, region, or hotel"
                 value={destination}
-                onChange={(e) => setDestination(e.target.value)}
+                onChange={(e) => dispatch(setDestination(e.target.value))}
                 className="home__search-input"
               />
             </div>
@@ -59,7 +58,7 @@ function Home() {
                 id="check-in"
                 type="date"
                 value={checkIn}
-                onChange={(e) => setCheckIn(e.target.value)}
+                onChange={(e) => dispatch(setCheckIn(e.target.value))}
                 className="home__search-input"
               />
             </div>
@@ -69,7 +68,7 @@ function Home() {
                 id="check-out"
                 type="date"
                 value={checkOut}
-                onChange={(e) => setCheckOut(e.target.value)}
+                onChange={(e) => dispatch(setCheckOut(e.target.value))}
                 className="home__search-input"
               />
             </div>
@@ -81,7 +80,7 @@ function Home() {
                 min={1}
                 max={10}
                 value={guests}
-                onChange={(e) => setGuests(Number(e.target.value) || 1)}
+                onChange={(e) => dispatch(setGuests(e.target.value))}
                 className="home__search-input"
               />
             </div>

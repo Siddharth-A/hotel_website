@@ -1,16 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { toggleTheme as toggleThemeAction, selectTheme, THEME_KEY } from '../store/themeSlice'
 import './Navbar.css'
 
-const THEME_KEY = 'hotel-theme'
-
-function getInitialTheme() {
-  const stored = localStorage.getItem(THEME_KEY)
-  if (stored === 'light' || stored === 'dark') return stored
-  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
-}
-
 function Navbar() {
-  const [theme, setTheme] = useState(getInitialTheme)
+  const theme = useSelector(selectTheme)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
@@ -18,7 +13,7 @@ function Navbar() {
   }, [theme])
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
+    dispatch(toggleThemeAction())
   }
 
   return (

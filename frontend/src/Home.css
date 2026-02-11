@@ -139,15 +139,15 @@
 /* Popular destinations */
 .home__destinations {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
 }
 
 .home__destination-card {
   position: relative;
   border-radius: 12px;
   overflow: hidden;
-  aspect-ratio: 4/3;
+  aspect-ratio: 16/10;
   text-decoration: none;
   color: inherit;
   display: block;
