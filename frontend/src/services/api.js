@@ -22,6 +22,12 @@ export const api = {
     return Array.isArray(data) ? data : []
   },
 
+  /** GET /api/flights – list all flights */
+  async getFlights() {
+    const { data } = await client.get('/api/flights')
+    return Array.isArray(data) ? data : []
+  },
+
   /** GET /api/health – health check */
   async health() {
     const { data } = await client.get('/api/health')
