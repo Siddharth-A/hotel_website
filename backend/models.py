@@ -54,3 +54,34 @@ class Hotel(db.Model):
             "created_at": _serialize_dt(self.created_at),
             "updated_at": _serialize_dt(self.updated_at),
         }
+
+
+class Flight(db.Model):
+    """Flight model matching the CSV/data schema."""
+
+    __tablename__ = config.FLIGHTS_TABLE
+
+    # id,flight_number,airline,origin,destination,type,departure_time,duration_hours,price
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    flight_number = db.Column(db.String(100), nullable=False)
+    airline = db.Column(db.String(100), nullable=False)
+    origin = db.Column(db.String(100), nullable=False)
+    destination = db.Column(db.String(100), nullable=False)
+    type = db.Column(db.String(100), nullable=False)
+    departure_time = db.Column(db.DateTime, nullable=False)
+    duration_hours = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Numeric(10, 2), nullable=False)
+
+    def to_dict(self):
+        """Serialize to JSON-friendly dict."""
+        return {
+            "id": self.id,
+            "flight_number": self.flight_number,
+            "airline": self.airline,
+            "origin": self.origin,
+            "destination": self.destination,
+            "type": self.type,
+            "departure_time": _serialize_dt(self.departure_time),
+            "duration_hours": self.duration_hours,
+            "price": float(self.price) if self.price is not None else None,
+        }

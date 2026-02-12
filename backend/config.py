@@ -10,6 +10,7 @@ DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 HOTELS_TABLE = os.getenv("HOTELS_TABLE")
+FLIGHTS_TABLE = os.getenv("FLIGHTS_TABLE")
 BACKEND_PORT = os.getenv("BACKEND_PORT")
 
 SQLALCHEMY_DATABASE_URI = (

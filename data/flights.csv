@@ -1,0 +1,21 @@
+id,flight_number,airline,origin,destination,type,departure_time,duration_hours,price
+1,BA304,British Airways,London (LHR),Paris (CDG),direct,08:15,1.5,89.00
+2,EK202,Emirates,Dubai (DXB),Singapore (SIN),direct,02:30,7.0,420.00
+3,AA100,American Airlines,New York (JFK),London (LHR),direct,19:00,7.5,385.00
+4,SQ318,Singapore Airlines,Singapore (SIN),Tokyo (NRT),direct,23:55,6.5,520.00
+5,AF178,Air France,Paris (CDG),New York (JFK),direct,10:45,8.0,450.00
+6,KL1234,KLM,Amsterdam (AMS),Bali (DPS),indirect,12:00,18.5,620.00
+7,LH890,Lufthansa,Frankfurt (FRA),Tokyo (NRT),indirect,14:20,14.0,580.00
+8,QR702,Qatar Airways,Doha (DOH),London (LHR),indirect,01:45,7.5,390.00
+9,CX251,Cathay Pacific,Hong Kong (HKG),New York (JFK),indirect,00:30,16.0,720.00
+10,TK1986,Turkish Airlines,Istanbul (IST),Singapore (SIN),indirect,03:15,11.0,410.00
+11,EY402,Etihad,Abu Dhabi (AUH),Paris (CDG),indirect,09:00,7.0,380.00
+12,SQ25,Singapore Airlines,Frankfurt (FRA),Singapore (SIN),indirect,23:30,12.5,650.00
+13,BA178,British Airways,London (LHR),Tokyo (NRT),indirect,16:45,13.5,680.00
+14,NH212,ANA,Tokyo (NRT),London (LHR),indirect,11:20,14.0,720.00
+15,UA900,United Airlines,San Francisco (SFO),Singapore (SIN),indirect,23:55,17.5,690.00
+16,EK348,Emirates,Dubai (DXB),Bali (DPS),indirect,09:30,10.5,480.00
+17,QF2,Qantas,Sydney (SYD),London (LHR),indirect,16:00,22.0,850.00
+18,CZ347,China Southern,Guangzhou (CAN),Paris (CDG),indirect,01:00,13.0,420.00
+19,AC878,Air Canada,Toronto (YYZ),Tokyo (NRT),indirect,13:15,14.5,780.00
+20,EK412,Emirates,Dubai (DXB),New York (JFK),indirect,09:00,14.0,620.00
