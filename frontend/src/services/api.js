@@ -1,33 +1,31 @@
 /**
- * Centralized API client for the hotel backend.
+ * Centralized API client for the hotel backend (using axios).
  */
+
+import axios from 'axios'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://192.168.68.112:5600'
 
-async function request(path, options = {}) {
-  const url = `${API_BASE}${path}`
-  const res = await fetch(url, {
-    headers: { 'Content-Type': 'application/json', ...options.headers },
-    ...options,
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+const client = axios.create({
+  baseURL: API_BASE,
+  headers: { 'Content-Type': 'application/json' },
+})
 
 export const api = {
   get baseUrl() {
-    return API_BASE
+    return client.defaults.baseURL ?? API_BASE
   },
 
   /** GET /api/hotels – list all hotels */
   async getHotels() {
-    const data = await request('/api/hotels')
+    const { data } = await client.get('/api/hotels')
     return Array.isArray(data) ? data : []
   },
 
   /** GET /api/health – health check */
   async health() {
-    return request('/api/health')
+    const { data } = await client.get('/api/health')
+    return data
   },
 }
 
