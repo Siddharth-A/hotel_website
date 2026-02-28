@@ -1,5 +1,6 @@
-import { useDispatch, useSelector } from 'react-redux'
+import type { FormEvent } from 'react'
 import { selectSearch, setDestination, setCheckIn, setCheckOut, setGuests } from '../store/searchSlice'
+import { useAppDispatch, useAppSelector } from '../store'
 import './Home.css'
 
 const POPULAR_DESTINATIONS = [
@@ -24,13 +25,12 @@ const WHY_US = [
 ]
 
 function Home() {
-  const { destination, checkIn, checkOut, guests } = useSelector(selectSearch)
-  const dispatch = useDispatch()
+  const { destination, checkIn, checkOut, guests } = useAppSelector(selectSearch)
+  const dispatch = useAppDispatch()
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log({ destination, checkIn, checkOut, guests })
-    // TODO: navigate to search results or call API
   }
 
   return (

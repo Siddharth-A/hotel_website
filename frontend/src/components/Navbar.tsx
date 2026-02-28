@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { toggleTheme as toggleThemeAction, selectTheme, THEME_KEY } from '../store/themeSlice'
+import { useAppDispatch, useAppSelector } from '../store'
 import './Navbar.css'
 
 function Navbar() {
-  const theme = useSelector(selectTheme)
-  const dispatch = useDispatch()
+  const theme = useAppSelector(selectTheme)
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)

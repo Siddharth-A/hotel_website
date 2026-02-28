@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { selectSearch, setDestination, setCheckIn, setCheckOut, setGuests } from '../store/searchSlice'
+import { useAppDispatch, useAppSelector } from '../store'
 import api from '../services/api'
+import type { Hotel } from '../types'
 import './Home.css'
 import './Hotels.css'
 
 function Hotels() {
-  const { destination, checkIn, checkOut, guests } = useSelector(selectSearch)
-  const dispatch = useDispatch()
-  const [hotels, setHotels] = useState([])
+  const { destination, checkIn, checkOut, guests } = useAppSelector(selectSearch)
+  const dispatch = useAppDispatch()
+  const [hotels, setHotels] = useState<Hotel[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -21,7 +22,7 @@ function Hotels() {
         const data = await api.getHotels()
         if (!cancelled) setHotels(data)
       } catch (e) {
-        if (!cancelled) setError(e.message || 'Failed to load hotels')
+        if (!cancelled) setError(e instanceof Error ? e.message : 'Failed to load hotels')
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -30,9 +31,8 @@ function Hotels() {
     return () => { cancelled = true }
   }, [])
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // TODO: filter or navigate with search params
   }
 
   return (

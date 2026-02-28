@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import api from '../services/api'
+import type { Flight } from '../types'
 import './Home.css'
 import './Flights.css'
 
-function formatDeparture(value) {
+function formatDeparture(value: string | number | null | undefined): string {
   if (value == null) return '—'
   const str = String(value)
   if (/^\d{1,2}:\d{2}/.test(str)) return str.slice(0, 5)
@@ -12,19 +13,21 @@ function formatDeparture(value) {
     if (!Number.isNaN(d.getTime())) {
       return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false })
     }
-  } catch (_) {}
+  } catch { /* not a valid date */ }
   return str
 }
 
-const FILTER_ALL = 'all'
-const FILTER_DIRECT = 'direct'
-const FILTER_INDIRECT = 'indirect'
+const FILTER_ALL = 'all' as const
+const FILTER_DIRECT = 'direct' as const
+const FILTER_INDIRECT = 'indirect' as const
+
+type FlightFilter = typeof FILTER_ALL | typeof FILTER_DIRECT | typeof FILTER_INDIRECT
 
 function Flights() {
-  const [flights, setFlights] = useState([])
+  const [flights, setFlights] = useState<Flight[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [filter, setFilter] = useState(FILTER_ALL)
+  const [error, setError] = useState<string | null>(null)
+  const [filter, setFilter] = useState<FlightFilter>(FILTER_ALL)
 
   const filteredFlights =
     filter === FILTER_ALL
@@ -40,7 +43,7 @@ function Flights() {
         const data = await api.getFlights()
         if (!cancelled) setFlights(data)
       } catch (e) {
-        if (!cancelled) setError(e.message || 'Failed to load flights')
+        if (!cancelled) setError(e instanceof Error ? e.message : 'Failed to load flights')
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -140,7 +143,7 @@ function Flights() {
                     </span>
                     {f.duration_hours != null && (
                       <span className="flights__duration">
-                        {Number(f.duration_hours) === parseInt(f.duration_hours, 10)
+                        {Number(f.duration_hours) === parseInt(String(f.duration_hours), 10)
                           ? `${f.duration_hours}h`
                           : `${Number(f.duration_hours).toFixed(1)}h`}
                       </span>

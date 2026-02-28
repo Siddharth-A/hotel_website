@@ -18,20 +18,20 @@ with app.app_context():
     db.create_all()
 
 
-@app.route("/api/hotels", methods=["GET"])
+@app.route("/hotels", methods=["GET"])
 def get_all_hotels():
     """Return all hotels from the database."""
     hotels = Hotel.query.order_by(Hotel.id).all()
     return jsonify([h.to_dict() for h in hotels])
 
-@app.route("/api/flights", methods=["GET"])
+@app.route("/flights", methods=["GET"])
 def get_all_flights():
     """Return all hotels from the database."""
     flights = Flight.query.order_by(Flight.id).all()
     return jsonify([f.to_dict() for f in flights])
 
 
-@app.route("/api/health", methods=["GET"])
+@app.route("/health", methods=["GET"])
 def health():
     """Health check for the API."""
     return jsonify({"status": "ok"})

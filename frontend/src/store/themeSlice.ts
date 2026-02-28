@@ -1,8 +1,14 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-const THEME_KEY = 'hotel-theme'
+type Theme = 'light' | 'dark'
 
-function getInitialTheme() {
+export interface ThemeState {
+  value: Theme
+}
+
+export const THEME_KEY = 'hotel-theme'
+
+function getInitialTheme(): Theme {
   const stored = localStorage.getItem(THEME_KEY)
   if (stored === 'light' || stored === 'dark') return stored
   return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
@@ -10,9 +16,9 @@ function getInitialTheme() {
 
 const themeSlice = createSlice({
   name: 'theme',
-  initialState: { value: getInitialTheme() },
+  initialState: { value: getInitialTheme() } as ThemeState,
   reducers: {
-    setTheme: (state, action) => {
+    setTheme: (state, action: PayloadAction<Theme>) => {
       const next = action.payload
       if (next === 'light' || next === 'dark') state.value = next
     },
@@ -23,6 +29,5 @@ const themeSlice = createSlice({
 })
 
 export const { setTheme, toggleTheme } = themeSlice.actions
-export const selectTheme = (state) => state.theme.value
-export { THEME_KEY }
+export const selectTheme = (state: { theme: ThemeState }) => state.theme.value
 export default themeSlice.reducer
