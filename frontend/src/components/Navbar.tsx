@@ -1,9 +1,12 @@
 import { useEffect } from 'react'
+import { AppBar, Toolbar, Typography, Button, IconButton, Stack, Box } from '@mui/material'
+import Brightness4Icon from '@mui/icons-material/Brightness4'
+import Brightness7Icon from '@mui/icons-material/Brightness7'
+import HotelIcon from '@mui/icons-material/Hotel'
 import { toggleTheme as toggleThemeAction, selectTheme, THEME_KEY } from '../store/themeSlice'
 import { useAppDispatch, useAppSelector } from '../store'
-import './Navbar.css'
 
-function Navbar() {
+export default function Navbar() {
   const theme = useAppSelector(selectTheme)
   const dispatch = useAppDispatch()
 
@@ -12,50 +15,37 @@ function Navbar() {
     localStorage.setItem(THEME_KEY, theme)
   }, [theme])
 
-  const toggleTheme = () => {
-    dispatch(toggleThemeAction())
-  }
-
   return (
-    <nav className="navbar">
-      <div className="navbar__inner">
-        <div className="navbar__start">
-          <a href="/" className="navbar__brand">
-          <svg className="navbar__brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <path d="M3 21h18M5 21V9l7-4 7 4v12M9 21v-6h6v6M9 9h.01M15 9h.01M9 15h.01M15 15h.01" />
-          </svg>
-          <span>Hotel.com</span>
-          </a>
-        </div>
-        <div className="navbar__end">
-          <ul className="navbar__links">
-            <li><a href="/hotels">Hotels</a></li>
-            <li><a href="/flights">Flights</a></li>
-            <li><a href="/contact">Contact</a></li>
-          </ul>
-          <button
-            type="button"
-            className="navbar__theme-toggle theme-slide"
-            onClick={toggleTheme}
-            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            aria-pressed={theme === 'dark'}
-            data-theme={theme}
-          >
-            <span className="theme-slide__track">
-              <svg className="theme-slide__icon theme-slide__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <circle cx="12" cy="12" r="4" />
-                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-              </svg>
-              <span className="theme-slide__thumb" />
-              <svg className="theme-slide__icon theme-slide__icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-              </svg>
-            </span>
-          </button>
-        </div>
-      </div>
-    </nav>
+    <AppBar position="sticky" color="default" elevation={1} sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Toolbar sx={{ maxWidth: 'lg', width: '100%', mx: 'auto' }}>
+        <HotelIcon sx={{ mr: 1 }} color="primary" />
+        <Typography
+          variant="h6"
+          component="a"
+          href="/"
+          fontWeight={700}
+          fontStyle="italic"
+          sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}
+        >
+          Hotel.com
+        </Typography>
+
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Button href="/hotels" color="inherit">Hotels</Button>
+          <Button href="/flights" color="inherit">Flights</Button>
+          <Button href="/contact" color="inherit">Contact</Button>
+
+          <Box sx={{ ml: 1 }}>
+            <IconButton
+              onClick={() => dispatch(toggleThemeAction())}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              color="inherit"
+            >
+              {theme === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+            </IconButton>
+          </Box>
+        </Stack>
+      </Toolbar>
+    </AppBar>
   )
 }
-
-export default Navbar

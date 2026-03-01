@@ -1,7 +1,10 @@
 import type { FormEvent } from 'react'
-import { selectSearch, setDestination, setCheckIn, setCheckOut, setGuests } from '../store/searchSlice'
-import { useAppDispatch, useAppSelector } from '../store'
-import './Home.css'
+import {
+  Container, Grid, Typography, Card, CardMedia, Box, Paper, TextField, Button, Stack,
+} from '@mui/material'
+import HeroSection from '../components/HeroSection'
+import SearchForm from '../components/SearchForm'
+import HotelCard from '../components/HotelCard'
 
 const POPULAR_DESTINATIONS = [
   { id: 1, name: 'Paris', country: 'France', image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&h=300&fit=crop' },
@@ -24,138 +27,104 @@ const WHY_US = [
   { icon: '💬', title: '24/7 Support', text: "We're here whenever you need us." },
 ]
 
-function Home() {
-  const { destination, checkIn, checkOut, guests } = useAppSelector(selectSearch)
-  const dispatch = useAppDispatch()
-
-  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    console.log({ destination, checkIn, checkOut, guests })
-  }
-
+export default function Home() {
   return (
-    <div className="home">
-      {/* Hero + Search */}
-      <section className="home__hero">
-        <div className="home__hero-inner">
-          <h1 className="home__hero-title">Find your perfect stay</h1>
-          <p className="home__hero-subtitle">Compare hotels, read reviews, and book at the best price.</p>
-          <form className="home__search" onSubmit={handleSearch}>
-            <div className="home__search-field">
-              <label htmlFor="destination" className="home__search-label">Destination</label>
-              <input
-                id="destination"
-                type="text"
-                placeholder="City, region, or hotel"
-                value={destination}
-                onChange={(e) => dispatch(setDestination(e.target.value))}
-                className="home__search-input"
-              />
-            </div>
-            <div className="home__search-field">
-              <label htmlFor="check-in" className="home__search-label">Check-in</label>
-              <input
-                id="check-in"
-                type="date"
-                value={checkIn}
-                onChange={(e) => dispatch(setCheckIn(e.target.value))}
-                className="home__search-input"
-              />
-            </div>
-            <div className="home__search-field">
-              <label htmlFor="check-out" className="home__search-label">Check-out</label>
-              <input
-                id="check-out"
-                type="date"
-                value={checkOut}
-                onChange={(e) => dispatch(setCheckOut(e.target.value))}
-                className="home__search-input"
-              />
-            </div>
-            <div className="home__search-field">
-              <label htmlFor="guests" className="home__search-label">Guests</label>
-              <input
-                id="guests"
-                type="number"
-                min={1}
-                max={10}
-                value={guests}
-                onChange={(e) => dispatch(setGuests(e.target.value))}
-                className="home__search-input"
-              />
-            </div>
-            <button type="submit" className="home__search-btn">Search</button>
-          </form>
-        </div>
-      </section>
+    <>
+      <HeroSection title="Find your perfect stay" subtitle="Compare hotels, read reviews, and book at the best price.">
+        <SearchForm onSubmit={() => console.log('search')} />
+      </HeroSection>
 
-      <div className="home__content">
+      <Container maxWidth="lg" sx={{ py: 4 }}>
         {/* Popular destinations */}
-        <section className="home__section">
-          <h2 className="home__section-title">Popular destinations</h2>
-          <div className="home__destinations">
-            {POPULAR_DESTINATIONS.map((d) => (
-              <a key={d.id} href={`/hotels?destination=${encodeURIComponent(d.name)}`} className="home__destination-card">
-                <img src={d.image} alt={d.name} className="home__destination-img" />
-                <div className="home__destination-overlay">
-                  <span className="home__destination-name">{d.name}</span>
-                  <span className="home__destination-country">{d.country}</span>
-                </div>
-              </a>
-            ))}
-          </div>
-        </section>
+        <Typography variant="h5" fontWeight={700} gutterBottom>
+          Popular destinations
+        </Typography>
+        <Grid container spacing={2} sx={{ mb: 5 }}>
+          {POPULAR_DESTINATIONS.map((d) => (
+            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={d.id}>
+              <Card
+                component="a"
+                href={`/hotels?destination=${encodeURIComponent(d.name)}`}
+                sx={{ textDecoration: 'none', position: 'relative', display: 'block', overflow: 'hidden' }}
+              >
+                <CardMedia component="img" height={180} image={d.image} alt={d.name} />
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-end',
+                    p: 1.5,
+                  }}
+                >
+                  <Typography fontWeight={700} color="white">{d.name}</Typography>
+                  <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.85)' }}>
+                    {d.country}
+                  </Typography>
+                </Box>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
 
         {/* Featured hotels */}
-        <section className="home__section">
-          <h2 className="home__section-title">Featured hotels</h2>
-          <div className="home__hotels">
-            {FEATURED_HOTELS.map((h) => (
-              <article key={h.id} className="home__hotel-card">
-                <div className="home__hotel-image-wrap">
-                  <img src={h.image} alt={h.name} className="home__hotel-img" />
-                  <span className="home__hotel-rating">{h.rating}</span>
-                </div>
-                <div className="home__hotel-body">
-                  <h3 className="home__hotel-name">{h.name}</h3>
-                  <p className="home__hotel-location">{h.location}</p>
-                  <p className="home__hotel-reviews">{h.reviews.toLocaleString()} reviews</p>
-                  <p className="home__hotel-price">
-                    <strong>${h.price}</strong>
-                    <span className="home__hotel-price-night"> / night</span>
-                  </p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
+        <Typography variant="h5" fontWeight={700} gutterBottom>
+          Featured hotels
+        </Typography>
+        <Grid container spacing={2} sx={{ mb: 5 }}>
+          {FEATURED_HOTELS.map((h) => (
+            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={h.id}>
+              <HotelCard
+                name={h.name}
+                location={h.location}
+                image={h.image}
+                price={h.price}
+                rating={h.rating}
+                reviews={h.reviews}
+              />
+            </Grid>
+          ))}
+        </Grid>
 
         {/* Why book with us */}
-        <section className="home__section home__section--muted">
-          <h2 className="home__section-title">Why book with us</h2>
-          <div className="home__why">
-            {WHY_US.map((item, i) => (
-              <div key={i} className="home__why-item">
-                <span className="home__why-icon">{item.icon}</span>
-                <h3 className="home__why-title">{item.title}</h3>
-                <p className="home__why-text">{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        <Typography variant="h5" fontWeight={700} gutterBottom textAlign="center">
+          Why book with us
+        </Typography>
+        <Grid container spacing={3} sx={{ mb: 5, justifyContent: 'center' }}>
+          {WHY_US.map((item, i) => (
+            <Grid size={{ xs: 6, sm: 3 }} key={i}>
+              <Stack alignItems="center" textAlign="center" spacing={1}>
+                <Typography fontSize={28}>{item.icon}</Typography>
+                <Typography fontWeight={600}>{item.title}</Typography>
+                <Typography variant="body2" color="text.secondary">{item.text}</Typography>
+              </Stack>
+            </Grid>
+          ))}
+        </Grid>
 
-        {/* CTA */}
-        <section className="home__cta">
-          <h2 className="home__cta-title">Save 10% on your next stay</h2>
-          <p className="home__cta-text">Sign up for our newsletter and get exclusive deals.</p>
-          <form className="home__cta-form" onSubmit={(e) => e.preventDefault()}>
-            <input type="email" placeholder="Enter your email" className="home__cta-input" />
-            <button type="submit" className="home__cta-btn">Subscribe</button>
-          </form>
-        </section>
-      </div>
-    </div>
+        {/* Newsletter CTA */}
+        <Paper sx={{ p: 3, textAlign: 'center' }}>
+          <Typography variant="h6" fontWeight={700} gutterBottom>
+            Save 10% on your next stay
+          </Typography>
+          <Typography color="text.secondary" sx={{ mb: 2 }}>
+            Sign up for our newsletter and get exclusive deals.
+          </Typography>
+          <Stack
+            component="form"
+            direction="row"
+            spacing={1}
+            justifyContent="center"
+            sx={{ maxWidth: 400, mx: 'auto' }}
+            onSubmit={(e: FormEvent) => e.preventDefault()}
+          >
+            <TextField size="small" placeholder="Enter your email" type="email" sx={{ flex: 1 }} />
+            <Button type="submit" variant="contained">Subscribe</Button>
+          </Stack>
+        </Paper>
+      </Container>
+    </>
   )
 }
-
-export default Home
