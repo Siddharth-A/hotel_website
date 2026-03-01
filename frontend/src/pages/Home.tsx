@@ -1,4 +1,5 @@
 import type { FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Container, Grid, Typography, Card, CardMedia, Box, Paper, TextField, Button, Stack,
 } from '@mui/material'
@@ -28,10 +29,12 @@ const WHY_US = [
 ]
 
 export default function Home() {
+  const navigate = useNavigate()
+
   return (
     <>
       <HeroSection title="Find your perfect stay" subtitle="Compare hotels, read reviews, and book at the best price.">
-        <SearchForm onSubmit={() => console.log('search')} />
+        <SearchForm onSubmit={() => navigate('/hotels')} />
       </HeroSection>
 
       <Container maxWidth="lg" sx={{ py: 4 }}>

@@ -1,5 +1,5 @@
 """Flask app and API routes."""
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 import config
@@ -20,8 +20,36 @@ with app.app_context():
 
 @app.route("/hotels", methods=["GET"])
 def get_all_hotels():
-    """Return all hotels from the database."""
-    hotels = Hotel.query.order_by(Hotel.id).all()
+    """Return hotels, optionally filtered by destination, price range, and rating."""
+    query = Hotel.query
+
+    destination = request.args.get("destination", "").strip()
+    if destination:
+        like = f"%{destination}%"
+        query = query.filter(
+            db.or_(
+                Hotel.name.ilike(like),
+                Hotel.city.ilike(like),
+                Hotel.country.ilike(like),
+            )
+        )
+
+    min_price = request.args.get("min_price", type=float)
+    max_price = request.args.get("max_price", type=float)
+    if min_price is not None:
+        query = query.filter(Hotel.price_per_night >= min_price)
+    if max_price is not None:
+        query = query.filter(Hotel.price_per_night <= max_price)
+
+    min_rating = request.args.get("min_rating", type=float)
+    if min_rating is not None:
+        query = query.filter(Hotel.rating >= min_rating)
+
+    free_cancellation = request.args.get("free_cancellation", type=str)
+    if free_cancellation == "true":
+        query = query.filter(Hotel.free_cancellation == 1)
+
+    hotels = query.order_by(Hotel.id).all()
     return jsonify([h.to_dict() for h in hotels])
 
 @app.route("/flights", methods=["GET"])

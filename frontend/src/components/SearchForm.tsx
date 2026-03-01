@@ -1,15 +1,22 @@
 import type { FormEvent } from 'react'
-import { Paper, TextField, Button, Stack } from '@mui/material'
+import { Paper, TextField, Button, Stack, FormControlLabel, Checkbox } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import { useAppDispatch, useAppSelector } from '../store'
-import { selectSearch, setDestination, setCheckIn, setCheckOut, setGuests } from '../store/searchSlice'
+import {
+  selectSearch,
+  setDestination,
+  setMinPrice,
+  setMaxPrice,
+  setFreeCancellation,
+  setMinRating,
+} from '../store/searchSlice'
 
 interface SearchFormProps {
   onSubmit?: () => void
 }
 
 export default function SearchForm({ onSubmit }: SearchFormProps) {
-  const { destination, checkIn, checkOut, guests } = useAppSelector(selectSearch)
+  const { destination, minPrice, maxPrice, freeCancellation, minRating } = useAppSelector(selectSearch)
   const dispatch = useAppDispatch()
 
   const handleSubmit = (e: FormEvent) => {
@@ -33,31 +40,42 @@ export default function SearchForm({ onSubmit }: SearchFormProps) {
         sx={{ flex: 1, minWidth: 160 }}
       />
       <TextField
-        label="Check-in"
-        type="date"
-        size="small"
-        slotProps={{ inputLabel: { shrink: true } }}
-        value={checkIn}
-        onChange={(e) => dispatch(setCheckIn(e.target.value))}
-        sx={{ flex: 1, minWidth: 140 }}
-      />
-      <TextField
-        label="Check-out"
-        type="date"
-        size="small"
-        slotProps={{ inputLabel: { shrink: true } }}
-        value={checkOut}
-        onChange={(e) => dispatch(setCheckOut(e.target.value))}
-        sx={{ flex: 1, minWidth: 140 }}
-      />
-      <TextField
-        label="Guests"
+        label="Min Price"
         type="number"
         size="small"
-        slotProps={{ htmlInput: { min: 1, max: 10 } }}
-        value={guests}
-        onChange={(e) => dispatch(setGuests(e.target.value))}
-        sx={{ width: 90 }}
+        slotProps={{ htmlInput: { min: 0 } }}
+        value={minPrice}
+        onChange={(e) => dispatch(setMinPrice(e.target.value))}
+        sx={{ width: 110 }}
+      />
+      <TextField
+        label="Max Price"
+        type="number"
+        size="small"
+        slotProps={{ htmlInput: { min: 0 } }}
+        value={maxPrice}
+        onChange={(e) => dispatch(setMaxPrice(e.target.value))}
+        sx={{ width: 110 }}
+      />
+      <TextField
+        label="Min Rating"
+        type="number"
+        size="small"
+        slotProps={{ htmlInput: { min: 0, max: 5, step: 0.1 } }}
+        value={minRating}
+        onChange={(e) => dispatch(setMinRating(e.target.value))}
+        sx={{ width: 110 }}
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={freeCancellation}
+            onChange={(e) => dispatch(setFreeCancellation(e.target.checked))}
+            size="small"
+          />
+        }
+        label="Free cancellation"
+        sx={{ mr: 0 }}
       />
       <Stack>
         <Button type="submit" variant="contained" startIcon={<SearchIcon />}>

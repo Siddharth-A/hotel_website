@@ -2,16 +2,18 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 export interface SearchState {
   destination: string
-  checkIn: string
-  checkOut: string
-  guests: number
+  minPrice: string
+  maxPrice: string
+  freeCancellation: boolean
+  minRating: string
 }
 
 const initialState: SearchState = {
   destination: '',
-  checkIn: '',
-  checkOut: '',
-  guests: 1,
+  minPrice: '',
+  maxPrice: '',
+  freeCancellation: false,
+  minRating: '',
 }
 
 const searchSlice = createSlice({
@@ -21,19 +23,21 @@ const searchSlice = createSlice({
     setDestination: (state, action: PayloadAction<string>) => {
       state.destination = action.payload
     },
-    setCheckIn: (state, action: PayloadAction<string>) => {
-      state.checkIn = action.payload
+    setMinPrice: (state, action: PayloadAction<string>) => {
+      state.minPrice = action.payload
     },
-    setCheckOut: (state, action: PayloadAction<string>) => {
-      state.checkOut = action.payload
+    setMaxPrice: (state, action: PayloadAction<string>) => {
+      state.maxPrice = action.payload
     },
-    setGuests: (state, action: PayloadAction<number | string>) => {
-      const n = Number(action.payload)
-      state.guests = Number.isFinite(n) && n >= 1 && n <= 10 ? n : 1
+    setFreeCancellation: (state, action: PayloadAction<boolean>) => {
+      state.freeCancellation = action.payload
+    },
+    setMinRating: (state, action: PayloadAction<string>) => {
+      state.minRating = action.payload
     },
   },
 })
 
-export const { setDestination, setCheckIn, setCheckOut, setGuests } = searchSlice.actions
+export const { setDestination, setMinPrice, setMaxPrice, setFreeCancellation, setMinRating } = searchSlice.actions
 export const selectSearch = (state: { search: SearchState }) => state.search
 export default searchSlice.reducer

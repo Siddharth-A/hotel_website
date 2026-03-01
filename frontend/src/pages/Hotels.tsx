@@ -1,35 +1,79 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Container, Typography, Grid } from '@mui/material'
 import HeroSection from '../components/HeroSection'
 import SearchForm from '../components/SearchForm'
 import HotelCard from '../components/HotelCard'
 import StatusDisplay from '../components/StatusDisplay'
 import { useFetch } from '../hooks/useFetch'
+import { useAppDispatch, useAppSelector } from '../store'
+import { selectSearch, setDestination } from '../store/searchSlice'
 import api from '../services/api'
+import type { SearchHotelsParams } from '../services/api'
 import type { Hotel } from '../types'
 
 const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=260&fit=crop'
 
+function buildParams(search: ReturnType<typeof selectSearch>): SearchHotelsParams {
+  return {
+    destination: search.destination || undefined,
+    minPrice: search.minPrice ? Number(search.minPrice) : undefined,
+    maxPrice: search.maxPrice ? Number(search.maxPrice) : undefined,
+    minRating: search.minRating ? Number(search.minRating) : undefined,
+    freeCancellation: search.freeCancellation || undefined,
+  }
+}
+
 export default function Hotels() {
-  const fetchHotels = useCallback(() => api.getHotels(), [])
+  const dispatch = useAppDispatch()
+  const search = useAppSelector(selectSearch)
+  const [searchParams] = useSearchParams()
+
+  const [committedParams, setCommittedParams] = useState<SearchHotelsParams>(() => {
+    const urlDest = searchParams.get('destination') ?? ''
+    const dest = urlDest || search.destination
+    return dest ? { destination: dest } : {}
+  })
+
+  const isFiltering = Object.values(committedParams).some(Boolean)
+  const initialised = useRef(false)
+
+  useEffect(() => {
+    if (initialised.current) return
+    initialised.current = true
+    const urlDest = searchParams.get('destination')
+    if (urlDest) {
+      dispatch(setDestination(urlDest))
+      setCommittedParams({ destination: urlDest })
+    }
+  }, [searchParams, dispatch])
+
+  const fetchHotels = useCallback(
+    () => isFiltering ? api.searchHotels(committedParams) : api.getHotels(),
+    [committedParams, isFiltering],
+  )
   const { data: hotels, loading, error } = useFetch<Hotel>(fetchHotels)
+
+  const handleSearch = () => {
+    setCommittedParams(buildParams(search))
+  }
 
   return (
     <>
       <HeroSection title="Find your perfect stay" subtitle="Compare hotels, read reviews, and book at the best price.">
-        <SearchForm />
+        <SearchForm onSubmit={handleSearch} />
       </HeroSection>
 
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Typography variant="h5" fontWeight={700} gutterBottom>
-          All hotels
+          {isFiltering ? 'Search results' : 'All hotels'}
         </Typography>
 
         <StatusDisplay
           loading={loading}
           error={error}
           empty={!loading && !error && hotels.length === 0}
-          emptyMessage="No hotels found."
+          emptyMessage={isFiltering ? 'No hotels match your filters.' : 'No hotels found.'}
           hint={`Check that the backend is running at ${api.baseUrl}`}
         />
 

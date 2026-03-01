@@ -31,7 +31,7 @@ class Hotel(db.Model):
     image_url = db.Column(db.String(500), nullable=True)
     description = db.Column(db.Text, nullable=True)
     amenities = db.Column(db.String(500), nullable=True)  # pipe-separated list
-    free_cancellation = db.Column(db.Boolean, default=True)
+    free_cancellation = db.Column(db.Integer, default=1)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -50,7 +50,7 @@ class Hotel(db.Model):
             "image_url": self.image_url,
             "description": self.description,
             "amenities": self.amenities.split("|") if self.amenities else [],
-            "free_cancellation": bool(self.free_cancellation),
+            "free_cancellation": self.free_cancellation,
             "created_at": _serialize_dt(self.created_at),
             "updated_at": _serialize_dt(self.updated_at),
         }

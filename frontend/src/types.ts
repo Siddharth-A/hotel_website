@@ -10,7 +10,7 @@ export interface Hotel {
   description?: string
   amenities?: string[]
   price_per_night?: number
-  free_cancellation?: boolean
+  free_cancellation?: number
 }
 
 export interface Flight {

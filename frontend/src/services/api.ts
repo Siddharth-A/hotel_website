@@ -8,6 +8,14 @@ const client = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
+export interface SearchHotelsParams {
+  destination?: string
+  minPrice?: number
+  maxPrice?: number
+  minRating?: number
+  freeCancellation?: boolean
+}
+
 export const api = {
   get baseUrl(): string {
     return client.defaults.baseURL ?? API_BASE
@@ -15,6 +23,19 @@ export const api = {
 
   async getHotels(): Promise<Hotel[]> {
     const { data } = await client.get('/hotels')
+    return Array.isArray(data) ? data : []
+  },
+
+  async searchHotels(params: SearchHotelsParams): Promise<Hotel[]> {
+    const { data } = await client.get('/hotels', {
+      params: {
+        destination: params.destination || undefined,
+        min_price: params.minPrice || undefined,
+        max_price: params.maxPrice || undefined,
+        min_rating: params.minRating || undefined,
+        free_cancellation: params.freeCancellation ? 'true' : undefined,
+      },
+    })
     return Array.isArray(data) ? data : []
   },
 
