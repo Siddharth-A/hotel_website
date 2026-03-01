@@ -1,13 +1,24 @@
-import { useMemo } from 'react'
+import { lazy, Suspense, useMemo } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import { ThemeProvider, CssBaseline } from '@mui/material'
+import { ThemeProvider, CssBaseline, CircularProgress, Box } from '@mui/material'
 import { useAppSelector } from './store'
 import { selectTheme } from './store/themeSlice'
 import { lightTheme, darkTheme } from './theme'
 import Navbar from './components/Navbar'
-import Home from './pages/Home'
-import Hotels from './pages/Hotels'
-import Flights from './pages/Flights'
+import ErrorBoundary from './components/ErrorBoundary'
+
+const Home = lazy(() => import('./pages/Home'))
+const Hotels = lazy(() => import('./pages/Hotels'))
+const Flights = lazy(() => import('./pages/Flights'))
+const Contact = lazy(() => import('./pages/Contact'))
+
+function PageLoader() {
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+      <CircularProgress />
+    </Box>
+  )
+}
 
 function App() {
   const mode = useAppSelector(selectTheme)
@@ -16,14 +27,19 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Navbar />
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/hotels" element={<Hotels />} />
-          <Route path="/flights" element={<Flights />} />
-        </Routes>
-      </Router>
+      <ErrorBoundary>
+        <Router>
+          <Navbar />
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/hotels" element={<Hotels />} />
+              <Route path="/flights" element={<Flights />} />
+              <Route path="/contact" element={<Contact />} />
+            </Routes>
+          </Suspense>
+        </Router>
+      </ErrorBoundary>
     </ThemeProvider>
   )
 }

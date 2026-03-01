@@ -1,5 +1,5 @@
 """SQLAlchemy models."""
-from datetime import datetime
+from datetime import datetime, timezone
 
 import config
 from extensions import db
@@ -14,6 +14,10 @@ def _serialize_dt(value):
     return str(value)
 
 
+def _utcnow():
+    return datetime.now(timezone.utc)
+
+
 class Hotel(db.Model):
     """Hotel model matching the CSV/data schema."""
 
@@ -21,19 +25,19 @@ class Hotel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable=False)
-    city = db.Column(db.String(100), nullable=False)
-    country = db.Column(db.String(100), nullable=False)
+    city = db.Column(db.String(100), nullable=False, index=True)
+    country = db.Column(db.String(100), nullable=False, index=True)
     address = db.Column(db.String(500), nullable=True)
-    price_per_night = db.Column(db.Numeric(10, 2), nullable=True)
-    rating = db.Column(db.Numeric(3, 2), nullable=True)
+    price_per_night = db.Column(db.Numeric(10, 2), nullable=True, index=True)
+    rating = db.Column(db.Numeric(3, 2), nullable=True, index=True)
     review_count = db.Column(db.Integer, nullable=True)
     star_rating = db.Column(db.Integer, nullable=True)
     image_url = db.Column(db.String(500), nullable=True)
     description = db.Column(db.Text, nullable=True)
     amenities = db.Column(db.String(500), nullable=True)  # pipe-separated list
     free_cancellation = db.Column(db.Integer, default=1)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+    updated_at = db.Column(db.DateTime, default=_utcnow, onupdate=_utcnow)
 
     def to_dict(self):
         """Serialize to JSON-friendly dict."""
@@ -61,12 +65,11 @@ class Flight(db.Model):
 
     __tablename__ = config.FLIGHTS_TABLE
 
-    # id,flight_number,airline,origin,destination,type,departure_time,duration_hours,price
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     flight_number = db.Column(db.String(100), nullable=False)
     airline = db.Column(db.String(100), nullable=False)
-    origin = db.Column(db.String(100), nullable=False)
-    destination = db.Column(db.String(100), nullable=False)
+    origin = db.Column(db.String(100), nullable=False, index=True)
+    destination = db.Column(db.String(100), nullable=False, index=True)
     type = db.Column(db.String(100), nullable=False)
     departure_time = db.Column(db.DateTime, nullable=False)
     duration_hours = db.Column(db.Integer, nullable=False)

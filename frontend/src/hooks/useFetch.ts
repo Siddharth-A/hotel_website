@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 
 interface UseFetchResult<T> {
-  data: T[]
+  data: T | null
   loading: boolean
   error: string | null
 }
 
-export function useFetch<T>(fetcher: () => Promise<T[]>): UseFetchResult<T> {
-  const [data, setData] = useState<T[]>([])
+export function useFetch<T>(fetcher: () => Promise<T>): UseFetchResult<T> {
+  const [data, setData] = useState<T | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 

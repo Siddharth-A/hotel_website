@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { AppBar, Toolbar, Typography, Button, IconButton, Stack, Box } from '@mui/material'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
@@ -21,8 +22,8 @@ export default function Navbar() {
         <HotelIcon sx={{ mr: 1 }} color="primary" />
         <Typography
           variant="h6"
-          component="a"
-          href="/"
+          component={Link}
+          to="/"
           fontWeight={700}
           fontStyle="italic"
           sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}
@@ -31,9 +32,9 @@ export default function Navbar() {
         </Typography>
 
         <Stack direction="row" spacing={1} alignItems="center">
-          <Button href="/hotels" color="inherit">Hotels</Button>
-          <Button href="/flights" color="inherit">Flights</Button>
-          <Button href="/contact" color="inherit">Contact</Button>
+          <Button component={Link} to="/hotels" color="inherit">Hotels</Button>
+          <Button component={Link} to="/flights" color="inherit">Flights</Button>
+          <Button component={Link} to="/contact" color="inherit">Contact</Button>
 
           <Box sx={{ ml: 1 }}>
             <IconButton

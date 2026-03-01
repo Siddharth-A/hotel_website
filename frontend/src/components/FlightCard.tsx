@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Card, CardContent, Typography, Chip, Stack, Box } from '@mui/material'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 
@@ -30,7 +31,7 @@ function badgeColor(type?: string): 'success' | 'warning' | 'default' {
   return 'default'
 }
 
-export default function FlightCard({
+export default memo(function FlightCard({
   airline,
   flightNumber,
   origin,
@@ -79,4 +80,4 @@ export default function FlightCard({
       </CardContent>
     </Card>
   )
-}
+})

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Container, Typography, Grid } from '@mui/material'
+import { Container, Typography, Grid, Pagination, Box } from '@mui/material'
 import HeroSection from '../components/HeroSection'
 import SearchForm from '../components/SearchForm'
 import HotelCard from '../components/HotelCard'
@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from '../store'
 import { selectSearch, setDestination } from '../store/searchSlice'
 import api from '../services/api'
 import type { SearchHotelsParams } from '../services/api'
-import type { Hotel } from '../types'
+import type { Hotel, PaginatedResponse } from '../types'
 
 const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&h=260&fit=crop'
 
@@ -35,6 +35,7 @@ export default function Hotels() {
     return dest ? { destination: dest } : {}
   })
 
+  const [page, setPage] = useState(1)
   const isFiltering = Object.values(committedParams).some(Boolean)
   const initialised = useRef(false)
 
@@ -49,12 +50,18 @@ export default function Hotels() {
   }, [searchParams, dispatch])
 
   const fetchHotels = useCallback(
-    () => isFiltering ? api.searchHotels(committedParams) : api.getHotels(),
-    [committedParams, isFiltering],
+    () =>
+      isFiltering
+        ? api.searchHotels({ ...committedParams, page })
+        : api.getHotels(page),
+    [committedParams, isFiltering, page],
   )
-  const { data: hotels, loading, error } = useFetch<Hotel>(fetchHotels)
+  const { data: result, loading, error } = useFetch<PaginatedResponse<Hotel>>(fetchHotels)
+  const hotels = result?.data ?? []
+  const totalPages = result?.pages ?? 0
 
   const handleSearch = () => {
+    setPage(1)
     setCommittedParams(buildParams(search))
   }
 
@@ -67,6 +74,11 @@ export default function Hotels() {
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Typography variant="h5" fontWeight={700} gutterBottom>
           {isFiltering ? 'Search results' : 'All hotels'}
+          {result && result.total > 0 && (
+            <Typography component="span" variant="body2" color="text.secondary" sx={{ ml: 1 }}>
+              ({result.total} found)
+            </Typography>
+          )}
         </Typography>
 
         <StatusDisplay
@@ -78,24 +90,41 @@ export default function Hotels() {
         />
 
         {!loading && !error && hotels.length > 0 && (
-          <Grid container spacing={2}>
-            {hotels.map((h) => (
-              <Grid size={{ xs: 12, sm: 6, md: 3 }} key={h.id}>
-                <HotelCard
-                  name={h.name}
-                  location={[h.city, h.country].filter(Boolean).join(', ') || '—'}
-                  image={h.image_url || DEFAULT_IMAGE}
-                  price={h.price_per_night}
-                  rating={h.rating}
-                  starRating={h.star_rating}
-                  reviews={h.review_count}
-                  description={h.description}
-                  amenities={h.amenities}
-                  freeCancellation={h.free_cancellation}
+          <>
+            <Grid container spacing={2}>
+              {hotels.map((h) => (
+                <Grid size={{ xs: 12, sm: 6, md: 3 }} key={h.id}>
+                  <HotelCard
+                    name={h.name}
+                    location={[h.city, h.country].filter(Boolean).join(', ') || '—'}
+                    image={h.image_url || DEFAULT_IMAGE}
+                    price={h.price_per_night}
+                    rating={h.rating}
+                    starRating={h.star_rating}
+                    reviews={h.review_count}
+                    description={h.description}
+                    amenities={h.amenities}
+                    freeCancellation={h.free_cancellation}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+
+            {totalPages > 1 && (
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+                <Pagination
+                  count={totalPages}
+                  page={page}
+                  onChange={(_, p) => {
+                    setPage(p)
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }}
+                  color="primary"
+                  size="large"
                 />
-              </Grid>
-            ))}
-          </Grid>
+              </Box>
+            )}
+          </>
         )}
       </Container>
     </>

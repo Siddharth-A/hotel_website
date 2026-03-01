@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { Card, CardMedia, CardContent, Typography, Chip, Box, Collapse, IconButton } from '@mui/material'
 import StarIcon from '@mui/icons-material/Star'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -16,7 +16,7 @@ interface HotelCardProps {
   freeCancellation?: number
 }
 
-export default function HotelCard({
+export default memo(function HotelCard({
   name,
   location,
   image,
@@ -39,7 +39,7 @@ export default function HotelCard({
       onClick={() => hasExpandableContent && setExpanded((prev) => !prev)}
     >
       <Box sx={{ position: 'relative' }}>
-        <CardMedia component="img" height={180} image={image} alt={name} />
+        <CardMedia component="img" height={180} image={image} alt={name} loading="lazy" />
         {rating != null && (
           <Chip
             icon={<StarIcon sx={{ fontSize: 16 }} />}
@@ -139,4 +139,4 @@ export default function HotelCard({
       </CardContent>
     </Card>
   )
-}
+})

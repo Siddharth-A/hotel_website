@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   Container, Grid, Typography, Card, CardMedia, Box, Paper, TextField, Button, Stack,
 } from '@mui/material'
@@ -46,11 +46,11 @@ export default function Home() {
           {POPULAR_DESTINATIONS.map((d) => (
             <Grid size={{ xs: 12, sm: 6, md: 3 }} key={d.id}>
               <Card
-                component="a"
-                href={`/hotels?destination=${encodeURIComponent(d.name)}`}
+                component={Link}
+                to={`/hotels?destination=${encodeURIComponent(d.name)}`}
                 sx={{ textDecoration: 'none', position: 'relative', display: 'block', overflow: 'hidden' }}
               >
-                <CardMedia component="img" height={180} image={d.image} alt={d.name} />
+                <CardMedia component="img" height={180} image={d.image} alt={d.name} loading="lazy" />
                 <Box
                   sx={{
                     position: 'absolute',
