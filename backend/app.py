@@ -1,6 +1,7 @@
 """Flask app and API routes."""
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from flask_caching import Cache
 
 import config
 from extensions import db
@@ -12,6 +13,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = config.SQLALCHEMY_TRACK_MODIFICAT
 
 CORS(app)
 db.init_app(app)
+cache = Cache(app, config={'CACHE_TYPE': 'SimpleCache'})
 
 
 with app.app_context():
@@ -19,8 +21,10 @@ with app.app_context():
 
 
 @app.route("/hotels", methods=["GET"])
+@cache.cached(timeout=60, query_string=True)
 def get_all_hotels():
     """Return hotels, optionally filtered by destination, price range, and rating."""
+    print("/hotels cache MISS")
     query = Hotel.query
 
     destination = request.args.get("destination", "").strip()
@@ -53,8 +57,10 @@ def get_all_hotels():
     return jsonify([h.to_dict() for h in hotels])
 
 @app.route("/flights", methods=["GET"])
+@cache.cached(timeout=60, query_string=True)
 def get_all_flights():
     """Return all hotels from the database."""
+    print("/flights cache MISS")
     flights = Flight.query.order_by(Flight.id).all()
     return jsonify([f.to_dict() for f in flights])
 
